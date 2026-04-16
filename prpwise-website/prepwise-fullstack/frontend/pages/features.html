@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PrepWise — Features</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@1,9..144,300;1,9..144,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/css/style.css"/>
+<link rel="stylesheet" href="/css/extra.css"/>
+<style>
+.navbar.scrolled{position:relative;top:0;left:0;transform:none;width:100%;max-width:100%;border-radius:0;margin:0}
+.nav-container{max-width:1100px;margin:0 auto}
+.page-hero{padding:100px 24px 60px;text-align:center}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:46px;font-weight:800;line-height:1.1;margin-bottom:14px}
+.page-hero h1 em{font-family:'Fraunces',serif;color:#E03A0A;font-style:italic}
+.page-hero p{color:rgba(255,255,255,.5);font-size:13px;max-width:520px;margin:0 auto 28px;line-height:1.7}
+.btn-red{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:#E03A0A;border:none;border-radius:10px;color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:background .2s,transform .15s;box-shadow:0 6px 24px rgba(224,58,10,.32)}
+.btn-red:hover{background:#FF6040;transform:translateY(-2px)}
+.container{max-width:1040px;margin:0 auto;padding:0 24px}
+.feat-section{padding:72px 0;border-top:1px solid rgba(255,255,255,.06)}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.feat-grid.reverse{direction:rtl}
+.feat-grid.reverse > *{direction:ltr}
+.feat-img{background:#111122;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:32px;min-height:260px;display:flex;align-items:center;justify-content:center;font-size:80px}
+.feat-kicker{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#E03A0A;margin-bottom:12px}
+.feat-title{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;line-height:1.2;margin-bottom:14px}
+.feat-title em{font-family:'Fraunces',serif;color:#E03A0A;font-style:italic}
+.feat-body p{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:20px}
+.feat-points{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.feat-points li{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:rgba(255,255,255,.7);line-height:1.5}
+.fp-dot{width:18px;height:18px;border-radius:5px;background:rgba(26,255,152,.12);border:1px solid rgba(26,255,152,.25);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px;color:#1AFF98}
+.roles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+.role-card{background:#111122;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px;text-align:center;transition:border-color .2s,transform .2s}
+.role-card:hover{border-color:rgba(224,58,10,.4);transform:translateY(-3px)}
+.role-icon{font-size:28px;margin-bottom:10px}
+.role-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.role-desc{font-size:11px;color:rgba(255,255,255,.45);line-height:1.5}
+.tips-section{padding:72px 0;background:#111122;margin:60px 0}
+.tips-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.tip-card{background:#0C0C18;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:22px}
+.tip-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:rgba(224,58,10,.4);margin-bottom:10px}
+.tip-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:6px}
+.tip-text{font-size:11px;color:rgba(255,255,255,.45);line-height:1.5}
+.cta-band{background:linear-gradient(135deg,rgba(224,58,10,.14),rgba(224,58,10,.04));border:1px solid rgba(224,58,10,.22);border-radius:16px;padding:48px;text-align:center;margin:60px 0}
+.cta-band h2{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:10px}
+.cta-band h2 em{font-family:'Fraunces',serif;color:#E03A0A;font-style:italic}
+.cta-band p{color:rgba(255,255,255,.5);font-size:13px;margin-bottom:24px}
+.roles-header{text-align:center;margin-bottom:40px}
+.roles-kicker{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#E03A0A;margin-bottom:12px;display:block}
+.roles-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;margin-bottom:12px}
+.roles-title em{font-family:'Fraunces',serif;color:#E03A0A;font-style:italic}
+.roles-description{color:rgba(255,255,255,.5);font-size:13px;max-width:500px;margin:0 auto}
+.tips-header{text-align:center;margin-bottom:36px}
+.tips-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:10px}
+.tips-title em{font-family:'Fraunces',serif;color:#E03A0A;font-style:italic}
+.tips-subtitle{color:rgba(255,255,255,.5);font-size:13px}
+@media(max-width:768px){.feat-grid{grid-template-columns:1fr}.feat-grid.reverse{direction:ltr}.roles-grid{grid-template-columns:1fr 1fr}.tips-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.roles-grid,.tips-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="navbar scrolled">
+  <div class="nav-container">
+    <a href="/" class="nav-logo"><div class="logo-mark"><span>P</span></div><span class="logo-text">Prep<strong>Wise</strong></span></a>
+    <nav class="nav-links"><a href="/" class="nav-link">Home</a><a href="/features" class="nav-link active">Features</a><a href="/about" class="nav-link">About</a><a href="/contact" class="nav-link">Contact</a></nav>
+    <div class="nav-ctas"><a href="/login" class="btn btn-ghost">Sign In</a><a href="/signup" class="btn btn-primary">Start Free</a></div>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>Everything you need to<br><em>ace the interview</em></h1>
+  <p>PrepWise combines voice AI, real-time body language analysis, and deep feedback into a single interview coaching platform.</p>
+  <a href="/signup" class="btn-red">Start Free — No Card Needed →</a>
+</div>
+
+<div class="container">
+
+  <!-- Voice AI -->
+  <div class="feat-section" id="voice">
+    <div class="feat-grid">
+      <div class="feat-img">🎙️</div>
+      <div class="feat-body">
+        <div class="feat-kicker">Feature 01</div>
+        <div class="feat-title">Voice AI <em>Interviewer</em></div>
+        <p>Our AI speaks questions aloud using natural, conversational speech — adjusting difficulty based on your answers, asking smart follow-ups, and sounding like a real interviewer rather than a chatbot reading from a script.</p>
+        <ul class="feat-points">
+          <li><div class="fp-dot">✓</div>Questions spoken aloud using Web Speech API</li>
+          <li><div class="fp-dot">✓</div>Your voice transcribed in real-time (Speech-to-Text)</li>
+          <li><div class="fp-dot">✓</div>Follow-up questions based on your answers</li>
+          <li><div class="fp-dot">✓</div>Adjustable difficulty — Easy, Medium, Hard</li>
+          <li><div class="fp-dot">✓</div>5 interview types: Behavioral, Technical, Mixed and more</li>
+        </ul>
+        <a href="/signup" class="btn-red">Try Voice Interview →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vision -->
+  <div class="feat-section" id="vision">
+    <div class="feat-grid reverse">
+      <div class="feat-img">👁️</div>
+      <div class="feat-body">
+        <div class="feat-kicker">Feature 02 — Signature</div>
+        <div class="feat-title">AI Vision <em>Analysis</em></div>
+        <p>Your face, posture, and body language are scored live — every frame. Most tools only score what you say. PrepWise scores how you say it. Because body language is 55%+ of how interviewers judge you.</p>
+        <ul class="feat-points">
+          <li><div class="fp-dot">✓</div>Eye contact percentage tracked live</li>
+          <li><div class="fp-dot">✓</div>Confidence and nervousness detection</li>
+          <li><div class="fp-dot">✓</div>Posture and shoulder alignment scoring</li>
+          <li><div class="fp-dot">✓</div>All processing runs in your browser — video never uploaded</li>
+          <li><div class="fp-dot">✓</div>Real-time coaching alerts during the interview</li>
+        </ul>
+        <a href="/signup" class="btn-red">Try AI Vision →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback -->
+  <div class="feat-section" id="feedback">
+    <div class="feat-grid">
+      <div class="feat-img">📊</div>
+      <div class="feat-body">
+        <div class="feat-kicker">Feature 03</div>
+        <div class="feat-title">Deep Feedback <em>Reports</em></div>
+        <p>After every session you get a full breakdown report — scored across 8 dimensions, with per-question feedback, timestamped coaching notes, and rewritten example answers to show you what excellent looks like.</p>
+        <ul class="feat-points">
+          <li><div class="fp-dot">✓</div>Overall score + Verbal and Non-verbal sub-scores</li>
+          <li><div class="fp-dot">✓</div>Per-question AI feedback and score</li>
+          <li><div class="fp-dot">✓</div>Key strengths and specific areas to improve</li>
+          <li><div class="fp-dot">✓</div>Actionable coaching tips with next steps</li>
+          <li><div class="fp-dot">✓</div>Session history to track improvement over time</li>
+        </ul>
+        <a href="/signup" class="btn-red">See a Sample Report →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resume -->
+  <div class="feat-section" id="resume">
+    <div class="feat-grid reverse">
+      <div class="feat-img">📄</div>
+      <div class="feat-body">
+        <div class="feat-kicker">Feature 04</div>
+        <div class="feat-title">Resume-Based <em>Mode</em></div>
+        <p>Upload your CV and PrepWise generates interview questions directly from your experience, skills, and projects. Every question is tailored to what you have actually done — not generic role questions.</p>
+        <ul class="feat-points">
+          <li><div class="fp-dot">✓</div>Upload PDF, DOC, or TXT resume</li>
+          <li><div class="fp-dot">✓</div>AI extracts your skills, projects, and experience</li>
+          <li><div class="fp-dot">✓</div>Questions generated from your specific background</li>
+          <li><div class="fp-dot">✓</div>Role detection — automatically identifies your field</li>
+          <li><div class="fp-dot">✓</div>Resume score and completeness check included</li>
+        </ul>
+        <a href="/signup" class="btn-red">Try Resume Mode →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Roles -->
+  <div class="feat-section" id="roles">
+    <div class="roles-header">
+      <div class="roles-kicker">Interview Types</div>
+      <div class="roles-title">All roles, <em>covered</em></div>
+      <p class="roles-description">Questions tailored to your specific role, seniority level, and target company tier.</p>
+    </div>
+    <div class="roles-grid">
+      <div class="role-card"><div class="role-icon">💻</div><div class="role-name">Software Engineering</div><div class="role-desc">DSA, System Design, Behavioral, Coding</div></div>
+      <div class="role-card"><div class="role-icon">📦</div><div class="role-name">Product Management</div><div class="role-desc">Case Studies, Strategy, Metrics, Prioritization</div></div>
+      <div class="role-card"><div class="role-icon">📊</div><div class="role-name">Data Science</div><div class="role-desc">ML concepts, SQL, Statistics, Case Studies</div></div>
+      <div class="role-card"><div class="role-icon">🎨</div><div class="role-name">Design (UX/UI)</div><div class="role-desc">Portfolio Review, Process, Critique, Accessibility</div></div>
+      <div class="role-card"><div class="role-icon">📣</div><div class="role-name">Marketing</div><div class="role-desc">Campaign Strategy, Analytics, Growth, SEO</div></div>
+      <div class="role-card"><div class="role-icon">📁</div><div class="role-name">Resume-Based</div><div class="role-desc">Questions generated from YOUR actual CV</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Tips section -->
+<div class="tips-section" id="tips">
+  <div class="container">
+    <div class="tips-header">
+      <div class="tips-title">Top Interview <em>Tips</em></div>
+      <p class="tips-subtitle">The most impactful habits our highest-scoring users share.</p>
+    </div>
+    <div class="tips-grid">
+      <div class="tip-card"><div class="tip-num">01</div><div class="tip-title">Use STAR Every Time</div><div class="tip-text">Situation, Task, Action, Result. Every behavioral question should follow this structure. Interviewers are trained to look for it.</div></div>
+      <div class="tip-card"><div class="tip-num">02</div><div class="tip-title">Look at the Camera</div><div class="tip-text">Look at the lens, not your own face on screen. It registers as direct eye contact to the interviewer and reads as confidence.</div></div>
+      <div class="tip-card"><div class="tip-num">03</div><div class="tip-title">Pause Before Answering</div><div class="tip-text">2-3 seconds of silence signals thoughtfulness. Most candidates jump to answer immediately — a brief pause makes you stand out.</div></div>
+      <div class="tip-card"><div class="tip-num">04</div><div class="tip-title">Add Numbers Always</div><div class="tip-text">"I improved performance" is weak. "I reduced load time by 40%, serving 2M users" is memorable. Quantify every achievement you mention.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="cta-band">
+    <h2>Ready to start <em>practising?</em></h2>
+    <p>Join thousands of candidates who practise smarter with PrepWise. Free plan, no credit card.</p>
+    <a href="/signup" class="btn-red">Create Free Account →</a>
+  </div>
+</div>
+
+<footer class="footer-section">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-brand"><div class="footer-logo"><div class="footer-mark">P</div><span class="footer-logo-name">Prep<strong>Wise</strong></span></div><p class="footer-tagline">AI-powered interview practice that actually prepares you.</p></div>
+      <div class="footer-col"><h3 class="footer-col-title">Pages</h3><ul class="footer-links"><li><a href="/">Home</a></li><li><a href="/features">Features</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom"><div class="footer-container"><div class="footer-bottom-inner"><p class="footer-copy">© 2025 PrepWise. All rights reserved.</p></div></div></div>
+</footer>
+</body>
+</html>

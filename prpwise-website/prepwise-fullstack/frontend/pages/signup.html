@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrepWise — Sign Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@1,9..144,300;1,9..144,600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --red: #E03A0A; --red-light: #FF6040; --green: #1AFF98;
+      --dark: #0C0C18; --dark-2: #111122; --white: #F9F7F2;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Mono', monospace;
+      --font-italic: 'Fraunces', serif;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--font-body);
+      background: var(--dark);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow-x: hidden;
+    }
+    .bg-glow-1 {
+      position: fixed; top: -200px; right: -200px;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(224,58,10,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .bg-glow-2 {
+      position: fixed; bottom: -200px; left: -200px;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,255,152,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .auth-card {
+      position: relative; z-index: 10;
+      width: 100%; max-width: 440px;
+      background: rgba(17,17,34,0.88);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 20px;
+      backdrop-filter: blur(24px);
+      padding: 48px 40px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+      margin: 24px;
+    }
+    .logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 36px; }
+    .logo-mark {
+      width: 36px; height: 36px; background: var(--red);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 800; font-size: 16px; color: #fff;
+      box-shadow: 0 4px 16px rgba(224,58,10,0.4);
+    }
+    .logo-text { font-family: var(--font-display); font-size: 20px; font-weight: 400; }
+    .logo-text strong { color: var(--red); font-weight: 800; }
+    h1 { font-family: var(--font-display); font-size: 26px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    h1 em { font-family: var(--font-italic); color: var(--red); font-style: italic; }
+    .subtitle { color: rgba(255,255,255,0.5); font-size: 12px; margin-bottom: 32px; line-height: 1.6; }
+    .step { display: none; }
+    .step.active { display: block; animation: fadeSlide 0.35s var(--ease); }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    label { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block; margin-bottom: 8px; }
+    .input-wrap { position: relative; margin-bottom: 18px; }
+    .prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 13px; color: rgba(255,255,255,0.5); pointer-events: none; }
+    input[type="tel"], input[type="text"], input[type="email"] {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; padding: 14px 16px 14px 48px;
+      color: var(--white); font-family: var(--font-body); font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+    }
+    input.no-prefix { padding-left: 16px !important; }
+    select {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; padding: 14px 16px;
+      color: var(--white); font-family: var(--font-body); font-size: 14px;
+      outline: none; cursor: pointer; appearance: none;
+    }
+    select option { background: #1a1a30; }
+    input:focus, select:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(224,58,10,0.15); }
+    .otp-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; margin-bottom: 20px; }
+    .otp-box {
+      aspect-ratio: 1; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; color: var(--white);
+      font-family: var(--font-display); font-size: 22px; font-weight: 700;
+      text-align: center; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .otp-box:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(224,58,10,0.15); }
+    .otp-box.filled { border-color: var(--green); color: var(--green); }
+    .btn-primary {
+      width: 100%; padding: 15px; background: var(--red);
+      border: none; border-radius: 10px; color: #fff;
+      font-family: var(--font-display); font-size: 14px; font-weight: 700;
+      letter-spacing: 0.04em; cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 6px 24px rgba(224,58,10,0.35);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--red-light); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-ghost {
+      background: none; border: none; color: rgba(255,255,255,0.4);
+      font-family: var(--font-body); font-size: 12px; cursor: pointer;
+      padding: 0; margin-top: 14px; display: block; width: 100%; text-align: center;
+      transition: color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--white); }
+    .alert { padding: 12px 16px; border-radius: 8px; font-size: 12px; margin-bottom: 20px; display: none; }
+    .alert.error   { background: rgba(224,58,10,0.15); border: 1px solid rgba(224,58,10,0.3); color: #FF9070; }
+    .alert.success { background: rgba(26,255,152,0.1); border: 1px solid rgba(26,255,152,0.25); color: var(--green); }
+    .alert.show { display: block; }
+    .timer { font-size: 11px; color: rgba(255,255,255,0.4); text-align: center; margin-top: 12px; }
+    .timer span { color: var(--red); }
+    .phone-display { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
+    .phone-display strong { color: var(--white); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    .switch-link { text-align: center; font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 24px; }
+    .switch-link a { color: var(--red); text-decoration: none; }
+    .switch-link a:hover { text-decoration: underline; }
+    .security-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(26,255,152,0.06); border: 1px solid rgba(26,255,152,0.15);
+      border-radius: 8px; padding: 10px 14px; margin-bottom: 28px;
+      font-size: 11px; color: rgba(26,255,152,0.8);
+    }
+    .progress-dots { display: flex; gap: 8px; margin-bottom: 28px; }
+    .dot-step { width: 28px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.1); transition: background 0.3s; }
+    .dot-step.active { background: var(--red); }
+    .dot-step.done { background: var(--green); }
+  </style>
+</head>
+<body>
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <div class="auth-card">
+    <div class="logo-row">
+      <div class="logo-mark">P</div>
+      <span class="logo-text">Prep<strong>Wise</strong></span>
+    </div>
+
+    <div class="security-badge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1L2 3.5V7c0 3 2.5 5.5 5 6 2.5-.5 5-3 5-6V3.5L7 1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+        <path d="M4.5 7l1.8 1.8L9.5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      OTP-only authentication — no passwords, no data leaks
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="progress-dots">
+      <div class="dot-step active" id="dot1"></div>
+      <div class="dot-step" id="dot2"></div>
+      <div class="dot-step" id="dot3"></div>
+    </div>
+
+    <div class="alert" id="alertBox"></div>
+
+    <!-- STEP 1: Name + Phone -->
+    <div class="step active" id="step1">
+      <h1>Create your<br><em>free account</em></h1>
+      <p class="subtitle">Start practicing with AI interviews in under 2 minutes.</p>
+
+      <label for="nameInput">Full Name</label>
+      <div class="input-wrap">
+        <input type="text" id="nameInput" placeholder="Your Name" class="no-prefix" />
+      </div>
+
+      <label for="phoneInput">Phone Number</label>
+      <div class="input-wrap">
+        <span class="prefix">+</span>
+        <input type="tel" id="phoneInput" placeholder="91 98765 43210" autocomplete="tel" />
+      </div>
+
+      <label for="roleSelect">Target Role</label>
+      <div class="input-wrap">
+        <select id="roleSelect">
+          <option value="software-engineer">Software Engineer</option>
+          <option value="product-manager">Product Manager</option>
+          <option value="data-scientist">Data Scientist / Analyst</option>
+          <option value="designer">Designer (UX/UI)</option>
+          <option value="marketing">Marketing</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <button class="btn-primary" id="sendOtpBtn" onclick="sendOTP()">
+        Send OTP & Continue
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </button>
+      <button class="btn-ghost" onclick="window.location.href='/login'">Already have an account? Sign in →</button>
+    </div>
+
+    <!-- STEP 2: OTP -->
+    <div class="step" id="step2">
+      <h1>Verify your<br><em>number</em></h1>
+      <p class="subtitle">Enter the 6-digit code we sent to your phone.</p>
+
+      <div class="phone-display" id="phoneDisplay"></div>
+
+      <label>Verification Code</label>
+      <div class="otp-grid" id="otpGrid">
+        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" />
+      </div>
+
+      <button class="btn-primary" id="verifyBtn" onclick="verifyOTP()">
+        Verify & Create Account
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </button>
+
+      <p class="timer" id="resendTimer">Resend in <span id="countdown">60</span>s</p>
+      <button class="btn-ghost" id="resendBtn" style="display:none" onclick="sendOTP(true)">Resend OTP</button>
+      <button class="btn-ghost" onclick="goBack()">← Edit Details</button>
+    </div>
+
+    <!-- STEP 3: Done -->
+    <div class="step" id="step3">
+      <h1>You're all set,<br><em>welcome!</em></h1>
+      <p class="subtitle">Your PrepWise account is ready. Let's start your first practice interview.</p>
+      <div style="text-align:center;font-size:48px;margin:24px 0">🎉</div>
+      <button class="btn-primary" onclick="window.location.href='/dashboard'">
+        Go to Dashboard
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <p class="switch-link" id="switchLink">
+      Already have an account? <a href="/login">Sign in →</a>
+    </p>
+  </div>
+
+  <script>
+    const API = '';
+    let currentPhone = '';
+    let savedName = '';
+    let savedRole = '';
+    let countdownInterval = null;
+
+    const boxes = document.querySelectorAll('.otp-box');
+    boxes.forEach((box, i) => {
+      box.addEventListener('input', () => {
+        box.value = box.value.replace(/\D/, '').slice(-1);
+        box.classList.toggle('filled', !!box.value);
+        if (box.value && i < boxes.length - 1) boxes[i + 1].focus();
+        if ([...boxes].every(b => b.value)) verifyOTP();
+      });
+      box.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
+      });
+      box.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+        paste.split('').slice(0, 6).forEach((ch, idx) => {
+          if (boxes[idx]) { boxes[idx].value = ch; boxes[idx].classList.add('filled'); }
+        });
+        if (paste.length >= 6) verifyOTP();
+        else if (boxes[paste.length]) boxes[paste.length].focus();
+      });
+    });
+
+    function showAlert(msg, type = 'error') {
+      const el = document.getElementById('alertBox');
+      el.textContent = msg; el.className = `alert ${type} show`;
+      setTimeout(() => el.classList.remove('show'), 5000);
+    }
+
+    function setLoading(id, on) {
+      const btn = document.getElementById(id);
+      if (on) { btn.dataset.orig = btn.innerHTML; btn.innerHTML = '<div class="spinner"></div>'; btn.disabled = true; }
+      else     { btn.innerHTML = btn.dataset.orig || btn.innerHTML; btn.disabled = false; }
+    }
+
+    function setDots(active) {
+      [1,2,3].forEach(i => {
+        const d = document.getElementById(`dot${i}`);
+        d.className = 'dot-step' + (i < active ? ' done' : i === active ? ' active' : '');
+      });
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById(`step${n}`).classList.add('active');
+      setDots(n);
+    }
+
+    function goBack() { stopCountdown(); showStep(1); }
+
+    function startCountdown(sec = 60) {
+      stopCountdown();
+      let s = sec;
+      document.getElementById('countdown').textContent = s;
+      document.getElementById('resendTimer').style.display = 'block';
+      document.getElementById('resendBtn').style.display = 'none';
+      countdownInterval = setInterval(() => {
+        s--;
+        document.getElementById('countdown').textContent = s;
+        if (s <= 0) {
+          stopCountdown();
+          document.getElementById('resendTimer').style.display = 'none';
+          document.getElementById('resendBtn').style.display = 'block';
+        }
+      }, 1000);
+    }
+    function stopCountdown() { clearInterval(countdownInterval); }
+
+    async function sendOTP(resend = false) {
+      if (!resend) {
+        savedName = document.getElementById('nameInput').value.trim();
+        savedRole = document.getElementById('roleSelect').value;
+        const raw  = document.getElementById('phoneInput').value.trim();
+        currentPhone = raw.startsWith('+') ? raw : '+' + raw.replace(/\s/g, '');
+        if (!savedName) return showAlert('Please enter your name.');
+        if (currentPhone.length < 10) return showAlert('Please enter a valid phone number.');
+      }
+
+      setLoading('sendOtpBtn', true);
+      try {
+        const r = await fetch(`${API}/api/auth/send-otp`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: currentPhone }),
+        });
+        const data = await r.json();
+        if (!data.success) return showAlert(data.message);
+
+        document.getElementById('phoneDisplay').innerHTML = `Sent to: <strong>${currentPhone}</strong>`;
+        showStep(2);
+        startCountdown(60);
+        boxes[0].focus();
+
+        if (data.devOtp) {
+          console.log('DEV OTP:', data.devOtp);
+          setTimeout(() => {
+            data.devOtp.split('').forEach((d, i) => {
+              if (boxes[i]) { boxes[i].value = d; boxes[i].classList.add('filled'); }
+            });
+          }, 300);
+        }
+      } catch (e) {
+        showAlert('Network error. Is the server running?');
+      } finally {
+        setLoading('sendOtpBtn', false);
+      }
+    }
+
+    async function verifyOTP() {
+      const otp = [...boxes].map(b => b.value).join('');
+      if (otp.length < 6) return showAlert('Enter all 6 digits.');
+      setLoading('verifyBtn', true);
+      try {
+        const r = await fetch(`${API}/api/auth/verify-otp`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: currentPhone, otp, name: savedName }),
+        });
+        const data = await r.json();
+        if (!data.success) {
+          boxes.forEach(b => b.style.borderColor = 'rgba(224,58,10,0.6)');
+          return showAlert(data.message);
+        }
+        localStorage.setItem('pw_token', data.token);
+        localStorage.setItem('pw_user', JSON.stringify(data.user));
+
+        // Save role
+        const token = data.token;
+        await fetch(`${API}/api/user/profile`, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ targetRole: savedRole }),
+        });
+
+        showStep(3);
+        document.getElementById('switchLink').style.display = 'none';
+      } catch (e) {
+        showAlert('Network error.');
+      } finally {
+        setLoading('verifyBtn', false);
+      }
+    }
+
+    // Redirect if already logged in
+    const tok = localStorage.getItem('pw_token');
+    if (tok) {
+      fetch('/api/auth/me', { headers: { Authorization: `Bearer ${tok}` } })
+        .then(r => r.json()).then(d => { if (d.success) window.location.href = '/dashboard'; }).catch(() => {});
+    }
+  </script>
+</body>
+</html>
