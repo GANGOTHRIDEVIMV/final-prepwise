@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PrepWise — Interview Room</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@1,9..144,300;1,9..144,600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#E03A0A;--red2:#FF6040;--green:#1AFF98;--dark:#0C0C18;--dark2:#111122;--white:#F9F7F2;--muted:rgba(255,255,255,.45);--border:rgba(255,255,255,.08);--fd:'Syne',sans-serif;--fb:'DM Mono',monospace}
+html,body{height:100%;-webkit-font-smoothing:antialiased}
+body{font-family:var(--fb);background:var(--dark);color:var(--white);overflow:hidden;display:flex;flex-direction:column}
+/* Top bar */
+.topbar{height:58px;background:var(--dark2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px;flex-shrink:0;z-index:10}
+.top-left{display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:8px}
+.lmark{width:30px;height:30px;background:var(--red);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:800;font-size:13px;color:#fff}
+.ltext{font-family:var(--fd);font-size:15px;font-weight:700}.ltext strong{color:var(--red)}
+.live-badge{display:flex;align-items:center;gap:6px;background:rgba(224,58,10,.12);border:1px solid rgba(224,58,10,.25);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--red)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.top-right{display:flex;align-items:center;gap:16px}
+.session-timer{font-family:var(--fd);font-size:20px;font-weight:800;color:var(--green);letter-spacing:.05em}
+.q-counter{font-size:11px;color:var(--muted)}
+.end-btn{padding:8px 16px;background:rgba(224,58,10,.15);border:1px solid rgba(224,58,10,.3);border-radius:8px;color:var(--red);font-family:var(--fb);font-size:11px;cursor:pointer;transition:background .2s}
+.end-btn:hover{background:rgba(224,58,10,.28)}
+/* Room body */
+.room-body{flex:1;display:grid;grid-template-columns:1fr 290px;overflow:hidden}
+/* Video area */
+.video-area{position:relative;background:#050510;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#localVideo{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam-off-placeholder{display:flex;flex-direction:column;align-items:center;gap:14px;color:rgba(255,255,255,.3);font-size:13px}
+.cam-off-placeholder svg{opacity:.3}
+/* Corner brackets */
+.corner{position:absolute;width:22px;height:22px;border-color:rgba(26,255,152,.5);border-style:solid}
+.c-tl{top:14px;left:14px;border-width:2px 0 0 2px}
+.c-tr{top:14px;right:14px;border-width:2px 2px 0 0}
+.c-bl{bottom:80px;left:14px;border-width:0 0 2px 2px}
+.c-br{bottom:80px;right:14px;border-width:0 2px 2px 0}
+/* Mic indicator */
+.mic-bar{position:absolute;top:14px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:rgba(5,5,16,.8);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:11px;color:var(--muted)}
+.mic-waves{display:flex;align-items:center;gap:2px;height:14px}
+.mw{width:2px;border-radius:1px;background:var(--green);animation:wave .6s ease-in-out infinite}
+.mw:nth-child(1){animation-delay:0s}.mw:nth-child(2){animation-delay:.1s}.mw:nth-child(3){animation-delay:.2s}.mw:nth-child(4){animation-delay:.3s}.mw:nth-child(5){animation-delay:.4s}
+@keyframes wave{0%,100%{height:3px}50%{height:12px}}
+.muted-mic .mw{animation:none;height:3px;background:var(--red)}
+/* Question overlay */
+.q-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(5,5,16,.95));padding:32px 24px 18px}
+.q-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:7px}
+.q-text{font-family:var(--fd);font-size:16px;font-weight:700;line-height:1.4;margin-bottom:12px}
+.q-tbar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.q-tfill{height:100%;background:var(--green);width:100%;transition:width 1s linear}
+/* AI speaking indicator */
+.ai-speaking{position:absolute;top:14px;right:14px;background:rgba(26,255,152,.1);border:1px solid rgba(26,255,152,.3);border-radius:8px;padding:6px 12px;font-size:11px;color:var(--green);display:none}
+.ai-speaking.show{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+/* Panel */
+.panel{background:var(--dark2);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.panel-sec{padding:16px 16px;border-bottom:1px solid var(--border)}
+.panel-title{font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.metric{margin-bottom:12px}
+.metric-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+.metric-val{font-family:var(--fd);font-weight:700}
+.mtrack{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.mfill{height:100%;border-radius:2px;transition:width .8s ease}
+.fill-g{background:var(--green)}.fill-r{background:var(--red)}.fill-y{background:#FFB400}.fill-b{background:#5B8EFF}
+.ai-alert{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;border-radius:8px;font-size:11px;margin-bottom:7px;line-height:1.4}
+.ai-warn{background:rgba(255,180,0,.08);border:1px solid rgba(255,180,0,.2);color:#FFD060}
+.ai-ok{background:rgba(26,255,152,.08);border:1px solid rgba(26,255,152,.2);color:var(--green)}
+.ai-info{background:rgba(91,142,255,.08);border:1px solid rgba(91,142,255,.2);color:#8AB0FF}
+/* Text answer */
+.ans-wrap{padding:12px 14px;border-bottom:1px solid var(--border)}
+.ans-ta{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--white);font-family:var(--fb);font-size:12px;resize:none;outline:none;transition:border-color .2s;line-height:1.5}
+.ans-ta:focus{border-color:var(--red)}
+/* Q list */
+.q-list-panel{padding:14px}
+.q-item-p{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:8px;font-size:11px;line-height:1.5;border:1px solid var(--border);background:rgba(255,255,255,.02);margin-bottom:7px;transition:border-color .2s}
+.q-item-p.active{border-color:var(--red);background:rgba(224,58,10,.06);color:var(--white)}
+.q-item-p.done{border-color:rgba(26,255,152,.3);background:rgba(26,255,152,.04);color:var(--muted)}
+.q-item-p.pending{color:rgba(255,255,255,.3)}
+.qnum{width:20px;height:20px;border-radius:5px;background:var(--red);color:#fff;font-family:var(--fd);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qnum.done-n{background:var(--green);color:var(--dark)}
+/* Bottom controls */
+.controls{height:74px;background:var(--dark2);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:14px;flex-shrink:0;position:relative;padding:0 22px}
+.ctrl{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:rgba(255,255,255,.04);cursor:pointer;font-size:16px;transition:all .2s}
+.ctrl:hover{background:rgba(255,255,255,.09);transform:scale(1.05)}
+.ctrl.on{background:rgba(26,255,152,.12);border-color:rgba(26,255,152,.4)}
+.ctrl.off{background:rgba(224,58,10,.12);border-color:rgba(224,58,10,.4)}
+.submit-btn{padding:12px 30px;background:var(--red);border:none;border-radius:22px;color:#fff;font-family:var(--fd);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 18px rgba(224,58,10,.35)}
+.submit-btn:hover{background:var(--red2);transform:scale(1.02)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.next-btn{padding:12px 30px;background:var(--green);border:none;border-radius:22px;color:var(--dark);font-family:var(--fd);font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;display:none}
+.next-btn:hover{transform:scale(1.02)}
+.rec-lbl{position:absolute;right:22px;font-size:11px;color:var(--muted)}
+/* Permission modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(5,5,16,.92);z-index:1000;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--dark2);border:1px solid var(--border);border-radius:16px;padding:40px;max-width:400px;width:90%;text-align:center}
+.modal-icon{font-size:48px;margin-bottom:14px}
+.modal-title{font-family:var(--fd);font-size:22px;font-weight:800;margin-bottom:10px}
+.modal-sub{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:26px}
+.modal-btn{width:100%;padding:13px;background:var(--red);border:none;border-radius:10px;color:#fff;font-family:var(--fd);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:background .2s}
+.modal-btn:hover{background:var(--red2)}
+.modal-skip{background:none;border:none;color:var(--muted);font-family:var(--fb);font-size:12px;cursor:pointer;transition:color .2s}
+.modal-skip:hover{color:var(--white)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+</style>
+</head>
+<body>
+
+<!-- Permission Modal -->
+<div class="modal-overlay" id="permModal">
+  <div class="modal">
+    <div class="modal-icon">🎙️📷</div>
+    <div class="modal-title">Enable Camera & Mic</div>
+    <p class="modal-sub">PrepWise needs your camera for posture and eye contact analysis, and your microphone to transcribe your spoken answers in real-time.<br><br><strong>Your video is never uploaded</strong> — all processing happens in your browser.</p>
+    <button class="modal-btn" onclick="requestMedia()">Allow Camera & Microphone</button>
+    <button class="modal-skip" onclick="skipMedia()">Continue with audio only / no camera</button>
+  </div>
+</div>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="top-left">
+    <div class="logo"><div class="lmark">P</div><span class="ltext">Prep<strong>Wise</strong></span></div>
+    <div class="live-badge"><span class="live-dot"></span> LIVE SESSION</div>
+  </div>
+  <div class="top-right">
+    <span class="q-counter" id="qCounter">Q 1 / 5</span>
+    <span class="session-timer" id="timer">00:00</span>
+    <button class="end-btn" onclick="endInterview()">End Interview</button>
+  </div>
+</div>
+
+<!-- Room Body -->
+<div class="room-body">
+  <!-- Video -->
+  <div class="video-area" id="videoArea">
+    <video id="localVideo" autoplay muted playsinline style="display:none"></video>
+    <div class="cam-off-placeholder" id="camOff">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="4" y="16" width="44" height="32" rx="4" stroke="white" stroke-width="2"/><path d="M48 26l12-8v28l-12-8V26z" stroke="white" stroke-width="2" stroke-linejoin="round"/><line x1="8" y1="8" x2="56" y2="56" stroke="white" stroke-width="2"/></svg>
+      <span>Camera is off</span>
+    </div>
+    <div class="corner c-tl"></div><div class="corner c-tr"></div>
+    <div class="corner c-bl"></div><div class="corner c-br"></div>
+    <div class="mic-bar" id="micBar">
+      <div class="mic-waves" id="micWaves">
+        <div class="mw"></div><div class="mw"></div><div class="mw"></div><div class="mw"></div><div class="mw"></div>
+      </div>
+      <span id="micLbl">Listening...</span>
+    </div>
+    <div class="ai-speaking" id="aiSpeaking">🤖 AI is speaking...</div>
+    <div class="q-overlay">
+      <div class="q-lbl">Question <span id="qNum">1</span></div>
+      <div class="q-text" id="currentQ">Loading question...</div>
+      <div class="q-tbar"><div class="q-tfill" id="qtFill"></div></div>
+    </div>
+  </div>
+
+  <!-- Panel -->
+  <div class="panel">
+    <div class="panel-sec">
+      <div class="panel-title">Live Analysis</div>
+      <div class="metric"><div class="metric-row"><span>Confidence</span><span class="metric-val" id="m-conf">—</span></div><div class="mtrack"><div class="mfill fill-g" id="mb-conf" style="width:0%"></div></div></div>
+      <div class="metric"><div class="metric-row"><span>Eye Contact</span><span class="metric-val" id="m-eye">—</span></div><div class="mtrack"><div class="mfill fill-r" id="mb-eye" style="width:0%"></div></div></div>
+      <div class="metric"><div class="metric-row"><span>Posture</span><span class="metric-val" id="m-post">—</span></div><div class="mtrack"><div class="mfill fill-b" id="mb-post" style="width:0%"></div></div></div>
+      <div class="metric"><div class="metric-row"><span>Nervousness</span><span class="metric-val" id="m-nerv">—</span></div><div class="mtrack"><div class="mfill fill-y" id="mb-nerv" style="width:0%"></div></div></div>
+    </div>
+    <div class="panel-sec" id="alertsPanel">
+      <div class="panel-title">AI Coaching</div>
+      <div class="ai-alert ai-info">📡 Start speaking — coaching tips will appear here</div>
+    </div>
+    <div class="ans-wrap">
+      <div class="panel-title" style="margin-bottom:8px">Your Answer</div>
+      <textarea class="ans-ta" id="textAnswer" rows="5" placeholder="Speak your answer (transcription appears here automatically) or type it..."></textarea>
+    </div>
+    <div class="q-list-panel">
+      <div class="panel-title">Questions</div>
+      <div id="qListPanel"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button class="ctrl on" id="micBtn" onclick="toggleMic()" title="Toggle Mic">🎙️</button>
+  <button class="ctrl on" id="camBtn" onclick="toggleCam()" title="Toggle Camera">📷</button>
+  <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">Submit Answer →</button>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+  <div class="rec-lbl" id="recLbl">⏺ Recording</div>
+</div>
+
+<script>
+const token = localStorage.getItem('pw_token');
+if (!token) location.href = '/login';
+
+const ivData = JSON.parse(localStorage.getItem('pw_interview') || 'null');
+if (!ivData) { alert('No active interview. Returning to dashboard.'); location.href = '/dashboard'; }
+
+const { interviewId, questions } = ivData;
+let currentQIdx = 0, sessionSec = 0, qTimerSec = 120;
+let sessionInt, qTimerInt, analysisInt;
+let stream = null, mediaRecorder = null, recordedChunks = [];
+let micOn = true, camOn = false;
+let speech = null;
+
+// Simulated live analysis values
+let analysis = { confidence:70, eyeContact:65, posture:76, nervousness:28 };
+
+// ── Render question list ────────────────
+function renderQList() {
+  document.getElementById('qListPanel').innerHTML = questions.map((q,i) => {
+    const cls = i < currentQIdx ? 'done' : i === currentQIdx ? 'active' : 'pending';
+    const numCls = i < currentQIdx ? 'done-n' : '';
+    return `<div class="q-item-p ${cls}"><span class="qnum ${numCls}">${i < currentQIdx ? '✓' : i+1}</span>${q.text}</div>`;
+  }).join('');
+}
+
+function loadQ(idx) {
+  currentQIdx = idx;
+  const q = questions[idx];
+  document.getElementById('qNum').textContent      = idx+1;
+  document.getElementById('qCounter').textContent  = `Q ${idx+1} / ${questions.length}`;
+  document.getElementById('currentQ').textContent  = q.text;
+  document.getElementById('textAnswer').value      = '';
+  document.getElementById('submitBtn').style.display = 'inline-flex';
+  document.getElementById('submitBtn').disabled    = false;
+  document.getElementById('submitBtn').textContent = 'Submit Answer →';
+  document.getElementById('nextBtn').style.display = 'none';
+  renderQList();
+  resetQTimer(120);
+  speakQuestion(q.text);
+}
+
+// ── Session timer ────────────────────────
+function startSessionTimer() {
+  sessionInt = setInterval(() => {
+    sessionSec++;
+    const m = String(Math.floor(sessionSec/60)).padStart(2,'0');
+    const s = String(sessionSec%60).padStart(2,'0');
+    document.getElementById('timer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function resetQTimer(sec) {
+  clearInterval(qTimerInt); qTimerSec = sec;
+  const fill = document.getElementById('qtFill');
+  fill.style.transition = 'none'; fill.style.width = '100%';
+  setTimeout(() => { fill.style.transition = `width ${sec}s linear`; fill.style.width = '0%'; }, 50);
+  qTimerInt = setInterval(() => { qTimerSec--; if (qTimerSec<=0) clearInterval(qTimerInt); }, 1000);
+}
+
+// ── AI Voice — speak question ────────────
+function speakQuestion(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.9; utter.pitch = 1.0; utter.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const engVoice = voices.find(v => v.lang.startsWith('en') && !v.name.includes('Google')) || voices[0];
+  if (engVoice) utter.voice = engVoice;
+  const aiEl = document.getElementById('aiSpeaking');
+  utter.onstart = () => aiEl.classList.add('show');
+  utter.onend   = () => { aiEl.classList.remove('show'); startListening(); };
+  window.speechSynthesis.speak(utter);
+}
+
+// ── Speech Recognition (mic → text) ─────
+function startListening() {
+  if (!micOn) return;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  speech = new SR();
+  speech.continuous    = true;
+  speech.interimResults= true;
+  speech.lang          = 'en-US';
+  let final = '';
+  speech.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+      else interim += e.results[i][0].transcript;
+    }
+    document.getElementById('textAnswer').value = final + interim;
+  };
+  speech.onerror = () => {};
+  try { speech.start(); } catch {}
+}
+
+// ── Request camera + mic ─────────────────
+async function requestMedia() {
+  document.getElementById('permModal').style.display = 'none';
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video:true, audio:true });
+    const vid = document.getElementById('localVideo');
+    vid.srcObject = stream; vid.style.display = 'block';
+    document.getElementById('camOff').style.display = 'none';
+    camOn = true; micOn = true;
+    document.getElementById('camBtn').className = 'ctrl on';
+    document.getElementById('micBtn').className = 'ctrl on';
+    startRecording();
+    startAnalysis();
+  } catch(e) {
+    console.warn('Full media failed, trying audio only:', e);
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+      micOn = true; camOn = false;
+      document.getElementById('camBtn').className = 'ctrl off';
+      startRecording();
+    } catch { micOn = false; }
+  }
+  startSessionTimer();
+  loadQ(0);
+}
+
+function skipMedia() {
+  document.getElementById('permModal').style.display = 'none';
+  micOn = false; camOn = false;
+  document.getElementById('micBtn').className = 'ctrl off';
+  document.getElementById('camBtn').className = 'ctrl off';
+  document.getElementById('micBar').style.display = 'none';
+  startSessionTimer();
+  loadQ(0);
+}
+
+// ── Toggle mic ───────────────────────────
+function toggleMic() {
+  if (!stream) return;
+  micOn = !micOn;
+  stream.getAudioTracks().forEach(t => t.enabled = micOn);
+  document.getElementById('micBtn').className = 'ctrl ' + (micOn?'on':'off');
+  document.getElementById('micWaves').className = 'mic-waves' + (micOn?'':' muted-mic');
+  document.getElementById('micLbl').textContent = micOn ? 'Listening...' : 'Muted';
+  if (!micOn && speech) { try{speech.stop();}catch{} }
+  if (micOn) startListening();
+}
+
+// ── Toggle camera ────────────────────────
+function toggleCam() {
+  if (!stream) return;
+  camOn = !camOn;
+  stream.getVideoTracks().forEach(t => t.enabled = camOn);
+  document.getElementById('camBtn').className = 'ctrl ' + (camOn?'on':'off');
+  document.getElementById('localVideo').style.display = camOn ? 'block' : 'none';
+  document.getElementById('camOff').style.display = camOn ? 'none' : 'flex';
+}
+
+// ── Recording ────────────────────────────
+function startRecording() {
+  if (!stream) return;
+  recordedChunks = [];
+  try { mediaRecorder = new MediaRecorder(stream, { mimeType:'video/webm;codecs=vp8,opus' }); } catch {
+    try { mediaRecorder = new MediaRecorder(stream); } catch { return; }
+  }
+  mediaRecorder.ondataavailable = e => { if (e.data.size>0) recordedChunks.push(e.data); };
+  mediaRecorder.start(1000);
+  document.getElementById('recLbl').innerHTML = '⏺ <span style="color:var(--red)">Recording</span>';
+}
+
+async function uploadRecording() {
+  if (!mediaRecorder || mediaRecorder.state==='inactive' || !recordedChunks.length) return;
+  return new Promise(res => {
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(recordedChunks, { type:'video/webm' });
+      if (blob.size < 1000) return res();
+      const form = new FormData(); form.append('recording', blob, 'interview.webm'); form.append('interviewId', interviewId);
+      try { await fetch('/api/recording/upload', { method:'POST', headers:{Authorization:'Bearer '+token}, body:form }); } catch {}
+      res();
+    };
+    mediaRecorder.stop();
+  });
+}
+
+// ── Live Analysis Simulation ─────────────
+// In production: replace with MediaPipe face/pose API
+function startAnalysis() {
+  updateMetrics();
+  analysisInt = setInterval(() => {
+    const drift = (v,max=95,min=10) => Math.min(max, Math.max(min, v+(Math.random()-.47)*7));
+    analysis.confidence  = drift(analysis.confidence);
+    analysis.eyeContact  = drift(analysis.eyeContact);
+    analysis.posture     = drift(analysis.posture, 98, 40);
+    analysis.nervousness = drift(analysis.nervousness, 70, 5);
+    updateMetrics();
+    updateAlerts();
+  }, 2500);
+}
+
+function updateMetrics() {
+  const set = (k, vid, bid) => {
+    const v = Math.round(analysis[k]);
+    document.getElementById(vid).textContent = v+'%';
+    document.getElementById(bid).style.width = v+'%';
+  };
+  set('confidence','m-conf','mb-conf'); set('eyeContact','m-eye','mb-eye');
+  set('posture','m-post','mb-post');    set('nervousness','m-nerv','mb-nerv');
+}
+
+function updateAlerts() {
+  const alerts = [];
+  if (analysis.eyeContact < 55) alerts.push({ type:'warn', t:'⚠ Look directly at the camera lens' });
+  if (analysis.eyeContact >= 72) alerts.push({ type:'ok', t:'✓ Great eye contact!' });
+  if (analysis.nervousness > 55) alerts.push({ type:'warn', t:'⚠ Take a slow breath — relax your shoulders' });
+  if (analysis.confidence >= 78) alerts.push({ type:'ok', t:'✓ Strong confident presence' });
+  if (analysis.posture < 52) alerts.push({ type:'warn', t:'⚠ Sit upright — back straight' });
+  if (!alerts.length) alerts.push({ type:'info', t:'📊 Analysis running...' });
+  document.getElementById('alertsPanel').innerHTML = `
+    <div class="panel-title">AI Coaching</div>
+    ${alerts.slice(0,3).map(a=>`<div class="ai-alert ai-${a.type.replace('warn','warn')==='warn'?'warn':a.type}">${a.t}</div>`).join('')}
+  `;
+}
+
+// ── Submit answer ────────────────────────
+async function submitAnswer() {
+  const answer = document.getElementById('textAnswer').value.trim();
+  if (!answer && micOn) { return; } // If mic on, let them speak more
+  if (answer.length < 5) { if(!confirm('Your answer is very short. Submit anyway?')) return; }
+  if (speech) { try{speech.stop();}catch{} }
+  window.speechSynthesis.cancel();
+
+  document.getElementById('submitBtn').innerHTML = '<div class="spin"></div>';
+  document.getElementById('submitBtn').disabled = true;
+
+  try {
+    const r = await fetch(`/api/interview/${interviewId}/answer`, {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({ questionIndex:currentQIdx, answer, durationSec:120-qTimerSec })
+    });
+    const d = await r.json();
+    document.getElementById('submitBtn').style.display = 'none';
+
+    if (currentQIdx + 1 < questions.length) {
+      document.getElementById('nextBtn').style.display = 'inline-flex';
+      if (d.feedback) {
+        document.getElementById('alertsPanel').innerHTML = `
+          <div class="panel-title">Answer Feedback</div>
+          <div class="ai-alert ai-ok">Score: ${d.score}/100</div>
+          <div class="ai-alert ai-info" style="font-size:10px">${d.feedback}</div>`;
+      }
+    } else {
+      document.getElementById('submitBtn').textContent = 'Finish & Get Report →';
+      document.getElementById('submitBtn').style.display = 'inline-flex';
+      document.getElementById('submitBtn').disabled = false;
+      document.getElementById('submitBtn').onclick = endInterview;
+    }
+    renderQList();
+  } catch {
+    document.getElementById('submitBtn').textContent = 'Submit Answer →';
+    document.getElementById('submitBtn').disabled = false;
+    alert('Error submitting. Check your connection.');
+  }
+}
+
+function nextQuestion() { loadQ(currentQIdx + 1); }
+
+// ── End interview ────────────────────────
+async function endInterview() {
+  if (currentQIdx < questions.length - 1) {
+    if (!confirm('End interview early? You have unanswered questions.')) return;
+  }
+  clearInterval(sessionInt); clearInterval(qTimerInt); clearInterval(analysisInt);
+  window.speechSynthesis.cancel();
+  if (speech) { try{speech.stop();}catch{} }
+  document.getElementById('submitBtn').innerHTML = '<div class="spin"></div> Finishing...';
+  document.getElementById('submitBtn').disabled = true;
+
+  await uploadRecording();
+  if (stream) stream.getTracks().forEach(t => t.stop());
+
+  try {
+    const r = await fetch(`/api/interview/${interviewId}/complete`, {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({ visionAnalysis:analysis, durationMin:Math.round(sessionSec/60) })
+    });
+    const d = await r.json();
+    if (d.success) {
+      localStorage.setItem('pw_last_report', JSON.stringify(d));
+      location.href = `/report?id=${interviewId}`;
+    } else { location.href = '/dashboard'; }
+  } catch { location.href = '/dashboard'; }
+}
+
+// Load voices on iOS
+window.speechSynthesis?.getVoices();
+window.addEventListener('voiceschanged', () => window.speechSynthesis?.getVoices());
+</script>
+</body>
+</html>
